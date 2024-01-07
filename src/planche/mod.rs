@@ -2,13 +2,11 @@
 
 pub mod mise_a_jour;
 
-use crate::vol::{ChargementVols, Vol, VolJson};
-use crate::{creer_chemin_jour, nom_fichier_date, ActifServeur};
-use chrono::{Datelike, NaiveDate, NaiveTime};
+use crate::vol::{Vol, VolJson};
+use chrono::{NaiveDate, NaiveTime};
 use json;
 use log;
 pub use mise_a_jour::MiseAJour;
-use std::fs;
 
 /// Représentation des données de vol d'une journée, en cours.
 #[derive(PartialEq, Debug, Clone)]
