@@ -1,8 +1,8 @@
 //! Tout ce qui attrait aux vols que nous enregistrons.
 
-use chrono::{Datelike, NaiveDate, NaiveTime};
+use chrono::{NaiveTime};
 use json::JsonValue;
-use std::fs;
+
 
 /// Représentation en mémoire d'un vol. Se référer à infos.json pour les différents codes.
 #[derive(Clone, PartialEq, Debug)]
