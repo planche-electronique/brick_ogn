@@ -5,7 +5,7 @@ use json::JsonValue;
 
 
 /// Représentation en mémoire d'un vol. Se référer à infos.json pour les différents codes.
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, serde::Serialize)]
 pub struct Vol {
     /// Le numéro de son vol venant d'ogn.
     pub numero_ogn: i32,

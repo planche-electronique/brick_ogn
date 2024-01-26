@@ -9,7 +9,7 @@ use log;
 pub use mise_a_jour::MiseAJour;
 
 /// Représentation des données de vol d'une journée, en cours.
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, serde::Serialize)]
 pub struct Planche {
     /// Tous les vols d'un jour.
     pub vols: Vec<Vol>,
