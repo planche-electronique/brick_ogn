@@ -1,11 +1,10 @@
 //! Tout ce qui attrait aux vols que nous enregistrons.
 
-use chrono::{NaiveTime};
+use chrono::NaiveTime;
 use json::JsonValue;
 
-
 /// Représentation en mémoire d'un vol. Se référer à infos.json pour les différents codes.
-#[derive(Clone, PartialEq, Debug, serde::Serialize)]
+#[derive(Clone, PartialEq, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Vol {
     /// Le numéro de son vol venant d'ogn.
     pub numero_ogn: i32,
