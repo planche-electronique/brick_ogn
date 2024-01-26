@@ -69,7 +69,14 @@ impl MiseAJour {
                 )
                 .unwrap();
 
-                self.heure = chrono::Local::now().time();
+                self.heure = NaiveTime::parse_from_str(
+                    objet["heure"].as_str().unwrap_or_else(|| {
+                        log::error!("pas la bonne valeur pour la nouvelle valeur de l'heure");
+                        ""
+                    }),
+                    "%H:%M",
+                )
+                .unwrap();
             }
             _ => {
                 eprintln!("pas un objet json");
