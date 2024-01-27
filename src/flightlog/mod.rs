@@ -6,7 +6,6 @@ use crate::flight::Flight;
 use chrono::{NaiveDate, NaiveTime};
 use json;
 use log;
-pub use update::Update;
 
 /// It is the struct associated with the flights of a day and what is 
 /// currently happenning for the ground organisation
@@ -34,7 +33,7 @@ impl Default for FlightLog {
 }
 
 impl FlightLog {
-    /// Une nouvelle planche.
+    /// A new Flightlog using default and new.
     pub fn new() -> Self {
         FlightLog {
             flights: Vec::new(),
@@ -72,21 +71,21 @@ impl FlightLog {
 }
 
 /// Mise à jour d'une planche à l'aide d'une [`MiseAJour`].
-pub trait MettreAJour {
+pub trait Update {
     /// Mise à jour d'une planche à l'aide d'une [`MiseAJour`].
-    fn mettre_a_jour(&mut self, mise_a_jour: Update);
+    fn update(&mut self, update: update::Update);
 }
 
-impl MettreAJour for FlightLog {
+impl Update for FlightLog {
     // on crée une fonction pour mettre la mise à jour dans le vecteur flights du jour
-    fn mettre_a_jour(&mut self, mise_a_jour: Update) {
+    fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
-        if mise_a_jour.date != self.date {
+        if update.date != self.date {
             log::error!("Mise a jour impossible: les dates ne sont pas les mêmes !");
-        } else if mise_a_jour.updated_field.clone() == "nouveau" {
+        } else if update.updated_field.clone() == "nouveau" {
             flights.push(Flight {
-                ogn_nb: mise_a_jour.ogn_nb,
-                glider: mise_a_jour.new_value.clone(),
+                ogn_nb: update.ogn_nb,
+                glider: update.new_value.clone(),
                 flight_code: String::new(),
                 takeoff_code: String::new(),
                 takeoff_machine: String::new(),
@@ -96,33 +95,33 @@ impl MettreAJour for FlightLog {
                 takeoff: NaiveTime::default(),
                 landing: NaiveTime::default(),
             });
-        } else if mise_a_jour.updated_field.clone() == "supprimer" {
-            flights.retain(|vol| vol.ogn_nb != mise_a_jour.ogn_nb);
+        } else if update.updated_field.clone() == "supprimer" {
+            flights.retain(|vol| vol.ogn_nb != update.ogn_nb);
         } else {
             for vol in &mut flights {
-                if vol.ogn_nb == mise_a_jour.ogn_nb {
-                    match mise_a_jour.updated_field.clone().as_str() {
+                if vol.ogn_nb == update.ogn_nb {
+                    match update.updated_field.clone().as_str() {
                         "takeoff_code" => {
-                            vol.takeoff_code = mise_a_jour.new_value.clone()
+                            vol.takeoff_code = update.new_value.clone()
                         }
                         "machine_decollage" => {
-                            vol.takeoff_machine = mise_a_jour.new_value.clone()
+                            vol.takeoff_machine = update.new_value.clone()
                         }
-                        "decolleur" => vol.takeoff_machine_pilot = mise_a_jour.new_value.clone(),
-                        "aeronef" => vol.glider = mise_a_jour.new_value.clone(),
-                        "code_vol" => vol.flight_code = mise_a_jour.new_value.clone(),
-                        "pilote1" => vol.pilot1 = mise_a_jour.new_value.clone(),
-                        "pilote2" => vol.pilot2 = mise_a_jour.new_value.clone(),
+                        "decolleur" => vol.takeoff_machine_pilot = update.new_value.clone(),
+                        "aeronef" => vol.glider = update.new_value.clone(),
+                        "code_vol" => vol.flight_code = update.new_value.clone(),
+                        "pilote1" => vol.pilot1 = update.new_value.clone(),
+                        "pilote2" => vol.pilot2 = update.new_value.clone(),
                         "decollage" => {
                             vol.takeoff = NaiveTime::parse_from_str(
-                                &mise_a_jour.new_value.clone(),
+                                &update.new_value.clone(),
                                 "%H:%M",
                             )
                             .unwrap();
                         }
                         "atterissage" => {
                             vol.landing = NaiveTime::parse_from_str(
-                                &mise_a_jour.new_value.clone(),
+                                &update.new_value.clone(),
                                 "%H:%M",
                             )
                             .unwrap();
@@ -133,17 +132,17 @@ impl MettreAJour for FlightLog {
                     }
                 }
             }
-            if mise_a_jour.ogn_nb == 0 {
-                match mise_a_jour.updated_field.as_str() {
-                    "pilote_tr" => self.winch_pilot = mise_a_jour.new_value,
-                    "treuil" => self.winch = mise_a_jour.new_value,
-                    "pilote_rq" => self.tow_pilot = mise_a_jour.new_value,
-                    "remorqueur" => self.tow_plane = mise_a_jour.new_value,
-                    "chef_piste" => self.field_chief = mise_a_jour.new_value,
+            if update.ogn_nb == 0 {
+                match update.updated_field.as_str() {
+                    "pilote_tr" => self.winch_pilot = update.new_value,
+                    "treuil" => self.winch = update.new_value,
+                    "pilote_rq" => self.tow_pilot = update.new_value,
+                    "remorqueur" => self.tow_plane = update.new_value,
+                    "chef_piste" => self.field_chief = update.new_value,
                     _ => log::warn!(
                         "la mise a jour pour le {} à {} ne contient pas le bon champ",
-                        mise_a_jour.date.format("%Y/%m/%d"),
-                        mise_a_jour.time.format("%H:%M")
+                        update.date.format("%Y/%m/%d"),
+                        update.time.format("%H:%M")
                     ),
                 }
             }

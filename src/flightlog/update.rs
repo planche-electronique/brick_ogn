@@ -122,13 +122,13 @@ impl UpdateJson for Vec<Update> {
 }*/
 
 /// S'occupe des mises a jour trop vieilles.
-pub trait UpdateObsoletes {
+pub trait ObsoleteUpdates {
     /// Pour supprimer les mises a jour de plus d'un certain temps.
-    fn enlever_majs_obsoletes(&mut self, temps: chrono::Duration);
+    fn remove_obsolete_updates(&mut self, temps: chrono::Duration);
 }
 
-impl UpdateObsoletes for Vec<Update> {
-    fn enlever_majs_obsoletes(&mut self, temps: chrono::Duration) {
+impl ObsoleteUpdates for Vec<Update> {
+    fn remove_obsolete_updates(&mut self, temps: chrono::Duration) {
         let time_actuelle = chrono::Local::now().time();
         let mut i = 0;
         while i < self.len() {
