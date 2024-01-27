@@ -82,8 +82,12 @@ impl Update for FlightLog {
     fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
         if update.date != self.date {
-            log::error!("Mise a jour impossible: les dates ne sont pas les mêmes !");
-        } else if update.updated_field.clone() == "nouveau" {
+            log::error!("Impossible update: dates doesn't match between the \
+                    proposed update ({}) and the FlightLog of {}.",
+                update.date,
+                self.date
+            );
+        } else if update.updated_field.clone() == "new" {
             flights.push(Flight {
                 ogn_nb: update.ogn_nb,
                 glider: update.new_value.clone(),
@@ -96,7 +100,7 @@ impl Update for FlightLog {
                 takeoff: NaiveTime::default(),
                 landing: NaiveTime::default(),
             });
-        } else if update.updated_field.clone() == "supprimer" {
+        } else if update.updated_field.clone() == "delete" {
             flights.retain(|vol| vol.ogn_nb != update.ogn_nb);
         } else {
             for vol in &mut flights {
@@ -128,7 +132,7 @@ impl Update for FlightLog {
                             .unwrap();
                         }
                         _ => {
-                            eprintln!("Requète de mise a jour mauvaise.");
+                            eprintln!("Bad update request.");
                         }
                     }
                 }
@@ -141,7 +145,7 @@ impl Update for FlightLog {
                     "remorqueur" => self.tow_plane = update.new_value,
                     "chef_piste" => self.field_chief = update.new_value,
                     _ => log::warn!(
-                        "la mise a jour pour le {} à {} ne contient pas le bon champ",
+                        "The update of the {} at {} does not contain the right field",
                         update.date.format("%Y/%m/%d"),
                         update.time.format("%H:%M")
                     ),

@@ -131,10 +131,10 @@ pub trait ObsoleteUpdates {
 
 impl ObsoleteUpdates for Vec<Update> {
     fn remove_obsolete_updates(&mut self, time: chrono::Duration) {
-        let time_actuelle = chrono::Local::now().time();
+        let current_time = chrono::Local::now().time();
         let mut i = 0;
         while i < self.len() {
-            if (time_actuelle - self[i].time) > time {
+            if (current_time - self[i].time) > time {
                 self.remove(i);
             } else {
                 i += 1;
