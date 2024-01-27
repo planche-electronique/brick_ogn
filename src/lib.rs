@@ -1,3 +1,3 @@
-pub mod planche;
-pub mod vol;
+pub mod flightlog;
+pub mod flight;
 pub mod tests;

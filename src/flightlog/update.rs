@@ -5,46 +5,46 @@ use chrono::{NaiveDate, NaiveTime};
 
 /// Représentation en mémoire d'une "planche".
 #[derive(Debug, PartialEq, Clone)]
-pub struct MiseAJour {
+pub struct Update {
     /// Le numero du vol sur OGN.
-    pub numero_ogn: i32,
+    pub ogn_nb: i32,
     /// Le nom du champ qui a été changé.
-    pub champ_mis_a_jour: String,
+    pub updated_field: String,
     /// La nouvelle valeur de ce champ.
-    pub nouvelle_valeur: String,
+    pub new_value: String,
     /// La date du vol sur lequel le changement est fait.
     pub date: NaiveDate,
-    /// L'heure à laquelle la requete est faite.
-    pub heure: NaiveTime,
+    /// L'time à laquelle la requete est faite.
+    pub time: NaiveTime,
 }
 
-impl Default for MiseAJour {
+impl Default for Update {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl MiseAJour {
+impl Update {
     /// Nouvelle mise à jour.
     pub fn new() -> Self {
-        MiseAJour {
-            numero_ogn: i32::default(), //numero du vol **OGN**
-            champ_mis_a_jour: String::default(),
-            nouvelle_valeur: String::default(),
+        Update {
+            ogn_nb: i32::default(), //numero du vol **OGN**
+            updated_field: String::default(),
+            new_value: String::default(),
             date: NaiveDate::default(),
-            heure: NaiveTime::default(),
+            time: NaiveTime::default(),
         }
     }
     /// Pour parser une mise à jour depuis un texte json, préalablement parsé à l'aide de [`json::parse()`].
     pub fn parse(&mut self, texte_json: json::JsonValue) -> Result<(), String> {
         match texte_json {
             json::JsonValue::Object(objet) => {
-                self.numero_ogn = objet["numero_ogn"].as_i32().unwrap_or_else(|| {
+                self.ogn_nb = objet["ogn_nb"].as_i32().unwrap_or_else(|| {
                     log::error!("pas de numero de vol dans la requete");
                     0
                 });
 
-                self.champ_mis_a_jour = objet["champ_mis_a_jour"]
+                self.updated_field = objet["updated_field"]
                     .as_str()
                     .unwrap_or_else(|| {
                         log::error!("pas le bon champ pour la nouvelle valeur");
@@ -52,7 +52,7 @@ impl MiseAJour {
                     })
                     .to_string();
 
-                self.nouvelle_valeur = objet["nouvelle_valeur"]
+                self.new_value = objet["new_value"]
                     .as_str()
                     .unwrap_or_else(|| {
                         log::error!("pas la bonne valeur pour la nouvelle valeur");
@@ -69,9 +69,9 @@ impl MiseAJour {
                 )
                 .unwrap();
 
-                self.heure = NaiveTime::parse_from_str(
-                    objet["heure"].as_str().unwrap_or_else(|| {
-                        log::error!("pas la bonne valeur pour la nouvelle valeur de l'heure");
+                self.time = NaiveTime::parse_from_str(
+                    objet["time"].as_str().unwrap_or_else(|| {
+                        log::error!("pas la bonne valeur pour la nouvelle valeur de l'time");
                         ""
                     }),
                     "%H:%M",
@@ -88,23 +88,23 @@ impl MiseAJour {
     /// Pour encoder en Json.
     pub fn vers_json(&self) -> String {
         json::object! {
-            numero_ogn: self.numero_ogn,
+            ogn_nb: self.ogn_nb,
             date: *self.date.format("%Y/%m/%d").to_string(),
-            champ_mis_a_jour: *self.champ_mis_a_jour,
-            nouvelle_valeur: *self.nouvelle_valeur,
-            heure: *self.heure.format("%H:%M").to_string(),
+            updated_field: *self.updated_field,
+            new_value: *self.new_value,
+            time: *self.time.format("%H:%M").to_string(),
         }
         .dump()
     }
 }
 
 /// S'occupe des relations entre plusieurs mises à jour et Json.
-pub trait MiseAJourJson {
+pub trait UpdateJson {
     /// Encode plusieurs mises à jour en Json.
     fn vers_json(&self) -> String;
 }
 
-impl MiseAJourJson for Vec<MiseAJour> {
+impl UpdateJson for Vec<Update> {
     fn vers_json(&self) -> String {
         let mut string = String::new();
         string.push('[');
@@ -121,17 +121,17 @@ impl MiseAJourJson for Vec<MiseAJour> {
 }
 
 /// S'occupe des mises a jour trop vieilles.
-pub trait MiseAJourObsoletes {
+pub trait UpdateObsoletes {
     /// Pour supprimer les mises a jour de plus d'un certain temps.
     fn enlever_majs_obsoletes(&mut self, temps: chrono::Duration);
 }
 
-impl MiseAJourObsoletes for Vec<MiseAJour> {
+impl UpdateObsoletes for Vec<Update> {
     fn enlever_majs_obsoletes(&mut self, temps: chrono::Duration) {
-        let heure_actuelle = chrono::Local::now().time();
+        let time_actuelle = chrono::Local::now().time();
         let mut i = 0;
         while i < self.len() {
-            if (heure_actuelle - self[i].heure) > temps {
+            if (time_actuelle - self[i].time) > temps {
                 self.remove(i);
             } else {
                 i += 1;
