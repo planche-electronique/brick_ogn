@@ -2,7 +2,7 @@
 
 pub mod update;
 
-use crate::flight::{Flight, FlightJson};
+use crate::flight::Flight;
 use chrono::{NaiveDate, NaiveTime};
 use json;
 use log;
@@ -46,7 +46,7 @@ impl FlightLog {
             field_chief: String::new(),
         }
     }
-
+    /*
     /// Encodage de la planche en Json.
     pub fn to_json(self) -> String {
         let flights_json = self.flights.vers_json();
@@ -68,7 +68,7 @@ impl FlightLog {
         json.push('\n');
         json.push('}');
         json
-    }
+    }*/
 }
 
 /// Mise à jour d'une planche à l'aide d'une [`MiseAJour`].

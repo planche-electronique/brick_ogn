@@ -2,7 +2,6 @@
 //! about flight.
 
 use chrono::NaiveTime;
-use json::JsonValue;
 
 /// Memory object of a flight. Different codes can be defined.
 #[derive(Clone, PartialEq, Debug, serde::Serialize, serde::Deserialize)]
@@ -64,7 +63,7 @@ impl Flight {
             takeoff: NaiveTime::default(),
             landing: NaiveTime::default(),
         }
-    }
+    }/*
 
     /// Encode the flight in JSON string.
     pub fn to_json(&self) -> String {
@@ -118,9 +117,9 @@ impl Flight {
             )
             .unwrap(),
         }
-    }
+    }*/
 }
-
+/*
 /// Un trait qui permet d'encoder/décoder des vols en JSON.
 pub trait FlightJson {
     /// Permet d'encoder un vol en JSON.
@@ -154,3 +153,4 @@ impl FlightJson for Vec<Flight> {
         (*self) = vols;
     }
 }
+*/

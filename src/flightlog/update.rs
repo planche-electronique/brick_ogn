@@ -2,9 +2,10 @@
 //! toute la planche à chaque fois
 
 use chrono::{NaiveDate, NaiveTime};
+use serde::{Serialize, Deserialize};
 
 /// Représentation en mémoire d'une "planche".
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Update {
     /// Le numero du vol sur OGN.
     pub ogn_nb: i32,
@@ -35,7 +36,7 @@ impl Update {
             time: NaiveTime::default(),
         }
     }
-    /// Pour parser une mise à jour depuis un texte json, préalablement parsé à l'aide de [`json::parse()`].
+    /*/// Pour parser une mise à jour depuis un texte json, préalablement parsé à l'aide de [`json::parse()`].
     pub fn parse(&mut self, texte_json: json::JsonValue) -> Result<(), String> {
         match texte_json {
             json::JsonValue::Object(objet) => {
@@ -83,9 +84,9 @@ impl Update {
             }
         };
         Ok(())
-    }
+    }*/
 
-    /// Pour encoder en Json.
+    /*/// Pour encoder en Json.
     pub fn vers_json(&self) -> String {
         json::object! {
             ogn_nb: self.ogn_nb,
@@ -95,10 +96,10 @@ impl Update {
             time: *self.time.format("%H:%M").to_string(),
         }
         .dump()
-    }
+    }*/
 }
 
-/// S'occupe des relations entre plusieurs mises à jour et Json.
+/* S'occupe des relations entre plusieurs mises à jour et Json.
 pub trait UpdateJson {
     /// Encode plusieurs mises à jour en Json.
     fn vers_json(&self) -> String;
@@ -118,7 +119,7 @@ impl UpdateJson for Vec<Update> {
         string.push(']');
         string
     }
-}
+}*/
 
 /// S'occupe des mises a jour trop vieilles.
 pub trait UpdateObsoletes {
