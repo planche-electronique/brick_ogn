@@ -1,5 +1,6 @@
-//! Module des planche, i.e. un ensemble de plusieurs [`Vol`] et d'affectation.
-
+//! FlightLog module i.e. the module in which we define how to store the
+//! informations about flights of a day and also the ground operations. For 
+//! operations, we store data on organisation on the ground.
 pub mod update;
 
 use crate::flight::Flight;
@@ -70,14 +71,14 @@ impl FlightLog {
     }*/
 }
 
-/// Mise à jour d'une planche à l'aide d'une [`MiseAJour`].
+/// To threat the update received, we can update a FlightLog if the dates match
+/// and a flight with the correct number is found.
 pub trait Update {
-    /// Mise à jour d'une planche à l'aide d'une [`MiseAJour`].
+    /// Updating a FlightLog.
     fn update(&mut self, update: update::Update);
 }
 
 impl Update for FlightLog {
-    // on crée une fonction pour mettre la mise à jour dans le vecteur flights du jour
     fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
         if update.date != self.date {

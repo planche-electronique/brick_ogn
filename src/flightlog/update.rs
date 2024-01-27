@@ -1,21 +1,22 @@
-//! Gestion des mise à jour: envoi des modifications par champ de vol pour éviter de recharger
-//! toute la planche à chaque fois
+//! Updates: little piece of information sent to change just a part of a FlightLog.
+//! Useful when changing just the takeoff or the pilot of a flight without reloading 
+//! entire flightlog's informations.
 
 use chrono::{NaiveDate, NaiveTime};
 use serde::{Serialize, Deserialize};
 
-/// Représentation en mémoire d'une "planche".
+/// Memory object of a FlightLog update.
 #[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Update {
-    /// Le numero du vol sur OGN.
+    /// The flight number in OGN day's fligths.
     pub ogn_nb: i32,
-    /// Le nom du champ qui a été changé.
+    /// The name of the field that was changed.
     pub updated_field: String,
-    /// La nouvelle valeur de ce champ.
+    /// The new value of this champs.
     pub new_value: String,
-    /// La date du vol sur lequel le changement est fait.
+    /// The date on which the modified flights happened.
     pub date: NaiveDate,
-    /// L'time à laquelle la requete est faite.
+    /// The time the update has been made: useful for tracking the latests ones.
     pub time: NaiveTime,
 }
 
@@ -26,10 +27,10 @@ impl Default for Update {
 }
 
 impl Update {
-    /// Nouvelle mise à jour.
+    /// A new update using type's default values.
     pub fn new() -> Self {
         Update {
-            ogn_nb: i32::default(), //numero du vol **OGN**
+            ogn_nb: i32::default(), 
             updated_field: String::default(),
             new_value: String::default(),
             date: NaiveDate::default(),
@@ -121,18 +122,19 @@ impl UpdateJson for Vec<Update> {
     }
 }*/
 
-/// S'occupe des mises a jour trop vieilles.
+/// Take care of too in the passt updates. Mainly to remove ones that are
+/// for more than some time ago.
 pub trait ObsoleteUpdates {
-    /// Pour supprimer les mises a jour de plus d'un certain temps.
-    fn remove_obsolete_updates(&mut self, temps: chrono::Duration);
+    /// To remove updates that dates from more than time.
+    fn remove_obsolete_updates(&mut self, time: chrono::Duration);
 }
 
 impl ObsoleteUpdates for Vec<Update> {
-    fn remove_obsolete_updates(&mut self, temps: chrono::Duration) {
+    fn remove_obsolete_updates(&mut self, time: chrono::Duration) {
         let time_actuelle = chrono::Local::now().time();
         let mut i = 0;
         while i < self.len() {
-            if (time_actuelle - self[i].time) > temps {
+            if (time_actuelle - self[i].time) > time {
                 self.remove(i);
             } else {
                 i += 1;
