@@ -45,29 +45,6 @@ impl FlightLog {
             field_chief: String::new(),
         }
     }
-    /*
-    /// Encodage de la planche en Json.
-    pub fn to_json(self) -> String {
-        let flights_json = self.flights.vers_json();
-        let date_json = self.date.format("%Y/%m/%d").to_string();
-        let rest_json = json::stringify(json::object! {
-            winch_pilot: self.winch_pilot,
-            winch: self.winch,
-            tow_pilot: self.tow_pilot,
-            tow_plane: self.tow_plane,
-            field_chief: self.field_chief,
-        });
-        let mut json = String::new();
-        json.push_str("{ \"date\": \"");
-        json.push_str(&date_json);
-        json.push_str("\",\n\"flights\" : ");
-        json.push_str(&flights_json);
-        json.push_str(", \n \"affectations\": ");
-        json.push_str(&rest_json);
-        json.push('\n');
-        json.push('}');
-        json
-    }*/
 
     pub fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
