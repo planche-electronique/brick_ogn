@@ -1,8 +1,5 @@
 #[cfg(test)]
-use {
-    crate::flightlog::{update::ObsoleteUpdates, update::Update, FlightLog},
-    json,
-};
+use crate::flightlog::{update::ObsoleteUpdates, update::Update};
 
 #[test]
 fn t_enlever_maj_obsoletes() {

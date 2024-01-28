@@ -5,7 +5,6 @@ pub mod update;
 
 use crate::flight::Flight;
 use chrono::{NaiveDate, NaiveTime};
-use json;
 use log;
 
 /// It is the struct associated with the flights of a day and what is 
@@ -69,17 +68,8 @@ impl FlightLog {
         json.push('}');
         json
     }*/
-}
 
-/// To threat the update received, we can update a FlightLog if the dates match
-/// and a flight with the correct number is found.
-pub trait Update {
-    /// Updating a FlightLog.
-    fn update(&mut self, update: update::Update);
-}
-
-impl Update for FlightLog {
-    fn update(&mut self, update: update::Update) {
+    pub fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
         if update.date != self.date {
             log::error!("Impossible update: dates doesn't match between the \
@@ -155,3 +145,4 @@ impl Update for FlightLog {
         self.flights = flights.clone();
     }
 }
+
