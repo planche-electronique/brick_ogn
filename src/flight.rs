@@ -1,7 +1,7 @@
 //! This module contains every struct and functions that could be useful
 //! about flight.
 
-use std::default;
+
 
 use chrono::NaiveTime;
 
