@@ -1,6 +1,8 @@
 //! This module contains every struct and functions that could be useful
 //! about flight.
 
+use std::default;
+
 use chrono::NaiveTime;
 
 /// Memory object of a flight. Different codes can be defined.
@@ -36,23 +38,6 @@ impl Default for Flight {
     fn default() -> Self {
         Flight {
             ogn_nb: 1,
-            takeoff_code: String::from("T"),
-            takeoff_machine: String::from("F-REMA"),
-            takeoff_machine_pilot: String::from("YDL"),
-            glider: String::from("F-CERJ"),
-            flight_code: String::from("S"),
-            pilot1: String::from("Walt Disney"),
-            pilot2: String::default(),
-            takeoff: NaiveTime::from_hms_opt(13, 0, 0).unwrap(),
-            landing: NaiveTime::from_hms_opt(14, 0, 0).unwrap(),
-        }
-    }
-}
-
-impl Flight {
-    fn _new() -> Self {
-        Flight {
-            ogn_nb: i32::default(),
             takeoff_code: String::default(),
             takeoff_machine: String::default(),
             takeoff_machine_pilot: String::default(),
@@ -63,5 +48,11 @@ impl Flight {
             takeoff: NaiveTime::default(),
             landing: NaiveTime::default(),
         }
+    }
+}
+
+impl Flight {
+    fn _new() -> Self {
+        Self::default()
     }
 }
