@@ -46,6 +46,18 @@ impl FlightLog {
         }
     }
 
+    pub fn new_date(date: NaiveDate) -> Self {
+        FlightLog {
+            flights: Vec::new(),
+            date,
+            winch_pilot: String::new(),
+            winch: String::new(),
+            tow_pilot: String::new(),
+            tow_plane: String::new(),
+            field_chief: String::new(),
+        }
+    }
+
     pub fn update(&mut self, update: update::Update) {
         let mut flights = self.flights.clone();
         if update.date != self.date {
